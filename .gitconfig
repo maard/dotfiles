@@ -1,0 +1,34 @@
+[user]
+  name = Max Yem
+  email = maard@cpan.org
+
+[merge]
+  tool = meld
+
+[diff]
+  tool = vimdiff
+  guitool = meld
+
+[difftool]
+  prompt = no
+
+[color]
+  diff = auto
+
+[alias]
+  b = branch
+  ci = commit
+  co = checkout
+  st = status
+  cp = cherry-pick
+  rs = remote -v show
+  tree = log --graph --oneline --decorate
+  sls = stash list
+  ssh = stash show -p
+
+[core]
+  excludesfile = ~/.gitignore
+
+[push]
+  default = upstream
+
