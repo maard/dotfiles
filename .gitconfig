@@ -25,6 +25,9 @@
   tree = log --graph --oneline --decorate
   sls = stash list
   ssh = stash show -p
+  up = pull upstream
+  d = diff
+  dd = diff --cached
 
 [core]
   excludesfile = ~/.gitignore
