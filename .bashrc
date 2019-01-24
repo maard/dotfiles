@@ -22,6 +22,15 @@ now () {
   date +"%Y%m%d_%H%M%S"
 }
 
+print_exit_code() {
+  local e=$?
+  if [ $e -ne 0 ]; then
+    echo -ne "\e[1;91m$e\e[0m "
+  fi
+}
+export PROMPT_COMMAND=print_exit_code
+
+
 if [ $(uname) = 'Linux' ]; then
   export PATH=~/perl5/perlbrew/bin:~/local/bin:$PATH:$HOME/bin:$HOME/local/bin:/usr/local/bin
 #  if [ $(which perlbrew 2>/dev/null) ]; then
@@ -32,7 +41,7 @@ if [ $(uname) = 'Linux' ]; then
   alias ls="ls --color=auto"
 fi
 
-export PS1="\e[0m\033]0;\h\007\D{%y-%m-%d %T} \u \e[35m\$(git_branch)\e[0m \e[34m\w\e[0m\n\$"
+export PS1="\e[0m\e]0;\h\007\D{%y-%m-%d %T} \u \e[35m\$(git_branch)\e[0m \e[34m\w\e[0m\n\$"
 
 alias g=git
 alias grepr='grep -r -n --color=auto'
@@ -54,4 +63,26 @@ bind '"\e[B": history-search-forward'
 if [ -f /etc/bash_completion.d/git ]; then
   . /etc/bash_completion.d/git
 fi
+
+screenenv() {
+  if [ -e ~/.env ]; then
+    . ~/.env
+  fi
+}
+
+# export current session and load it in new screen sessions
+if [ "$TERM" = "screen" ]; then
+  screenenv
+else
+  echo "export DISPLAY=$DISPLAY" > ~/.env
+fi
+
+vim_swp () {
+  find . -name '*.swp'|perl -pe 's!/\.([^/]+)\.swp$!/$1!'
+}
+
+vim_recover () {
+  local list=$(find . -name '*.swp'|perl -pe 's!/\.([^/]+)\.swp$!/$1!')
+  vim -r $list
+}
 
