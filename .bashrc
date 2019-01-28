@@ -22,13 +22,26 @@ now () {
   date +"%Y%m%d_%H%M%S"
 }
 
+
+# Add last command's error code to $PS1 if it's not 0
 print_exit_code() {
   local e=$?
   if [ $e -ne 0 ]; then
-    echo -ne "\e[1;91m$e\e[0m "
+    echo -ne "\e[0;91m$e\e[0m "
+  else
+    echo -n ""
   fi
 }
-export PROMPT_COMMAND=print_exit_code
+
+# Include user@host:path even into screen's windows' titles
+case $TERM in
+xterm*|vte*)
+  PROMPT_COMMAND='printf "\033]0;%s@%s:%s\007%s" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}" "$(print_exit_code)"'
+  ;;
+screen*)
+  PROMPT_COMMAND='printf "\033k%s@%s:%s\033\\%s" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}" "$(print_exit_code)"'
+  ;;
+esac
 
 
 if [ $(uname) = 'Linux' ]; then
