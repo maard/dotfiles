@@ -45,16 +45,18 @@ esac
 
 
 if [ $(uname) = 'Linux' ]; then
-  export PATH=~/perl5/perlbrew/bin:~/local/bin:$PATH:$HOME/bin:$HOME/local/bin:/usr/local/bin
+  export PATH=/local/bin:$PATH:$HOME/bin:$HOME/local/bin
 #  if [ $(which perlbrew 2>/dev/null) ]; then
 #    PB="\$(perlbrew_perl) "
 #  else
 #    PB=
 #  fi
   alias ls="ls --color=auto"
+  export PS1="\e[0m\e]0;\h\007\D{%y-%m-%d %T} \u \e[35m\$(git_branch)\e[0m \e[34m\w\e[0m\n\$"
+else
+  : # MinGW will take care of prompt
 fi
 
-export PS1="\e[0m\e]0;\h\007\D{%y-%m-%d %T} \u \e[35m\$(git_branch)\e[0m \e[34m\w\e[0m\n\$"
 
 alias g=git
 alias grepr='grep -r -n --color=auto'

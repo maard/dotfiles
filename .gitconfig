@@ -18,6 +18,7 @@
 
 [alias]
   amend = commit --amend
+  au = add -u
   b = branch
   ci = commit
   co = checkout
@@ -32,7 +33,7 @@
   up = pull upstream
   d = diff
   dd = diff --cached
-  wtf = whatchanged
+  w = whatchanged
 
 [core]
   excludesfile = ~/.gitignore
