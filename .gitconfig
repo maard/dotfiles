@@ -22,25 +22,26 @@
   b = branch
   ci = commit
   co = checkout
-  st = status
   cp = cherry-pick
+  d = diff
+  dd = diff --cached
+  no = log --name-only
+  p = log -p
   rs = remote -v show
-  tree1 = log --graph --oneline --decorate
-  tree = log --graph --abbrev-commit --decorate --date=local --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar / %ad)%C(reset) %C(white)%s%C(reset)  (%C(dim white)%an%C(reset))%C(bold yellow)%d%C(reset)'
   s = show
   sls = stash list
   ssh = stash show -p
+  st = status
+  tree = log --graph --abbrev-commit --decorate --date=local --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar / %ad)%C(reset) %C(white)%s%C(reset)  (%C(dim white)%an%C(reset))%C(bold yellow)%d%C(reset)'
   up = pull upstream
-  d = diff
-  dd = diff --cached
   w = whatchanged
 
 [core]
   excludesfile = ~/.gitignore
+  # fix WSL execute flag "feature"
+  filemode = false
 
 [push]
-  # depends on a apecific git version.
-  # since i have different versions on different machines, either one must be used.
-  default = matching
-#  default = upstream
+  # safety: without refspec, only push if the remote branch name is the same
+  default = simple
 
