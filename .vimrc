@@ -17,11 +17,11 @@ if has("autocmd")
   augroup vimrcEx
   au!
 
-  autocmd BufReadPost *
-    \ if line("'\'") > 0 && line("'\'") <= line("$") |
-    \   exe "normal g`\"" |
-    \ endif
-  autocmd END
+"   autocmd BufReadPost *
+"     \ if line("'\'") > 0 && line("'\'") <= line("$") |
+"     \   exe "normal g`\"" |
+"     \ endif
+"   autocmd END
 else
   set autoindent
 endif
