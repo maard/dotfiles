@@ -15,8 +15,10 @@
 [color]
   branch = auto
   diff = auto
+  status = auto
 
 [alias]
+  a = add
   amend = commit --amend
   au = add -u
   b = branch

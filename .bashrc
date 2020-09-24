@@ -33,6 +33,11 @@ print_exit_code() {
   fi
 }
 
+export BASH_PID=$$
+first_child_cmd() {
+  ps --ppid $BASH_PID -o cmd | sed -n 2p | awk '{ print $1 }'
+}
+
 # Include user@host:path even into screen's windows' titles
 case $TERM in
 xterm*|vte*)
@@ -44,30 +49,28 @@ screen*)
 esac
 
 
-if [ $(uname) = 'Linux' ]; then
-  export PATH=/local/bin:$PATH:$HOME/bin:$HOME/local/bin
+export PATH=/local/bin:$PATH:$HOME/bin:$HOME/local/bin
 #  if [ $(which perlbrew 2>/dev/null) ]; then
 #    PB="\$(perlbrew_perl) "
 #  else
 #    PB=
 #  fi
-  alias ls="ls --color=auto"
-  export PS1="\e[0m\e]0;\h\007\D{%y-%m-%d %T} \u \e[35m\$(git_branch)\e[0m \e[34m\w\e[0m\n\$"
-else
-  : # MinGW will take care of prompt
-fi
+alias ls="ls --color=auto"
+export PS1="\e[0m\e]0;\h$(first_child_cmd \$\$)\a\D{%y-%m-%d %T} \h \u \e[35m\$(git_branch)\e[0m \e[34m\w\e[0m\n\$"
 
 
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 alias g=git
 alias grepr='grep -r -n --color=auto'
 alias ip2number="perl -le 'print unpack \"N\", pack \"C4\", split /\./, shift'"
-alias ls='ls -FG'
+alias ls='ls --color=auto'
 alias number2ip="perl -le 'print join \".\", unpack \"C4\", pack \"N\", shift'"
 alias qdiff="diff -r -q -x '.*' -x tags"
 alias vim="vim -p"
 alias vimdiffi="vimdiff -c 'set diffopt+=iwhite' -c 'set diffexpr=\"\"' -c 'windo set wrap' -c 'colorscheme evening'"
 alias git_refs="git for-each-ref --format='%(refname:short)|%(upstream:short)' refs/heads | column -t -s '|'|grep '\\s'"
 
+# Prefix-search history using up/down keys
 bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
 
@@ -75,9 +78,7 @@ bind '"\e[B": history-search-forward'
 #  . ~/perl5/perlbrew/etc/bashrc
 #fi
 
-if [ -f /etc/bash_completion.d/git ]; then
-  . /etc/bash_completion.d/git
-fi
+[ -f /etc/bash_completion.d/git ] && . /etc/bash_completion.d/git
 
 screenenv() {
   if [ -e ~/.env ]; then
@@ -100,4 +101,19 @@ vim_recover () {
   local list=$(find . -name '*.swp'|perl -pe 's!/\.([^/]+)\.swp$!/$1!')
   vim -r $list
 }
+
+PATH="/home/$USER/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/$USER/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/$USER/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/$USER/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/$USER/perl5"; export PERL_MM_OPT;
+
+# Forward my ssh key
+if [ -x /usr/bin/keychain ]; then
+  /usr/bin/keychain --nogui $HOME/.ssh/id_rsa
+  source $HOME/.keychain/$HOSTNAME-sh
+fi
+
+# Per-machine settings
+[ -f ~/.bashrc.local ] && . ~/.bashrc.local
 
