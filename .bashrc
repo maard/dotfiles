@@ -13,6 +13,11 @@ git_branch() {
   echo ${br:-'-'}
 }
 
+function is_interactive_shell() {
+  # https://www.gnu.org/software/bash/manual/html_node/Is-this-Shell-Interactive_003f.html
+  [[ "$-" =~ "i" ]]
+}
+
 perlbrew_perl () {
   curr=$(perlbrew list 2>/dev/null|grep '^*'|awk '{ print $2 }')
   echo ${curr:-system}
@@ -71,8 +76,10 @@ alias vimdiffi="vimdiff -c 'set diffopt+=iwhite' -c 'set diffexpr=\"\"' -c 'wind
 alias git_refs="git for-each-ref --format='%(refname:short)|%(upstream:short)' refs/heads | column -t -s '|'|grep '\\s'"
 
 # Prefix-search history using up/down keys
-bind '"\e[A": history-search-backward'
-bind '"\e[B": history-search-forward'
+if is_interactive_shell; then
+  bind '"\e[A": history-search-backward'
+  bind '"\e[B": history-search-forward'
+fi
 
 #if [ -f ~/perl5/perlbrew/etc/bashrc ]; then
 #  . ~/perl5/perlbrew/etc/bashrc
