@@ -19,6 +19,7 @@
 
 [alias]
   a = add
+  aauthor = commit --amend --reset-author
   amend = commit --amend
   au = add -u
   b = branch
@@ -27,6 +28,7 @@
   cp = cherry-pick
   d = diff
   dd = diff --cached
+  l = log --graph --abbrev-commit --decorate --date=local --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar / %ad)%C(reset) %C(white)%s%C(reset)  (%C(dim white)%an%C(reset))%C(bold yellow)%d%C(reset)'
   no = log --name-only
   p = log -p
   rs = remote -v show
@@ -34,7 +36,6 @@
   sls = stash list
   ssh = stash show -p
   st = status
-  tree = log --graph --abbrev-commit --decorate --date=local --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar / %ad)%C(reset) %C(white)%s%C(reset)  (%C(dim white)%an%C(reset))%C(bold yellow)%d%C(reset)'
   up = pull upstream
   w = whatchanged
 

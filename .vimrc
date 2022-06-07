@@ -40,9 +40,7 @@ set nu
 set laststatus=2
 set statusline=[%c\ %l/%L\ %p%%]\ %r%m%f%=%b\ 0x%B
 
-if &diff
-  colorscheme darkblue
-endif
+colorscheme darkblue
 
 noremap n nzz
 noremap N Nzz
