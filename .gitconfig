@@ -1,6 +1,6 @@
 [user]
-  name = Max Yem
-  email = maard@cpan.org
+  name = Max
+  email = 107768+maard@users.noreply.github.com
 
 [merge]
   tool = meld
@@ -19,8 +19,8 @@
 
 [alias]
   a = add
-  aauthor = commit --amend --reset-author
   amend = commit --amend
+  aauthor = commit --amend --reset-author
   au = add -u
   b = branch
   ci = commit
@@ -38,6 +38,9 @@
   st = status
   up = pull upstream
   w = whatchanged
+  wd = diff --word-diff-regex=.
+  wdd = diff --word-diff-regex=. --cached
+  ws = show --word-diff-regex=.
 
 [core]
   excludesfile = ~/.gitignore
@@ -47,4 +50,5 @@
 [push]
   # safety: without refspec, only push if the remote branch name is the same
   default = simple
-
+[include]
+	path = ~/.gitconfig.dev
