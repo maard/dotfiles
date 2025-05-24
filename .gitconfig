@@ -1,5 +1,7 @@
 [user]
-  name = Max
+	name = Max
+#  email = maksym.iemelianov@shopify.com
+  email = 107768+maard@users.noreply.github.com
 
 [merge]
   tool = meld
@@ -39,6 +41,7 @@
   w = whatchanged
   wd = diff --word-diff-regex=.
   wdd = diff --word-diff-regex=. --cached
+  wp = log -p --word-diff-regex=.
   ws = show --word-diff-regex=.
 
 [core]
@@ -50,4 +53,13 @@
   # safety: without refspec, only push if the remote branch name is the same
   default = simple
 [include]
-	path = ~/.gitconfig.dev
+	path = /Users/maksymiemelianov/.config/dev/gitconfig
+[init]
+	defaultBranch = main
+[rerere]
+	enabled = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
