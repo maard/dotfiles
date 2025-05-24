@@ -8,11 +8,6 @@ fi
 #export TERM=xterm
 export EDITOR=vim
 
-git_branch() {
-  br=$(git branch 2>/dev/null|grep '^ *'|awk '{ print $2 }')
-  echo ${br:-'-'}
-}
-
 function is_interactive_shell() {
   # https://www.gnu.org/software/bash/manual/html_node/Is-this-Shell-Interactive_003f.html
   [[ "$-" =~ "i" ]]
@@ -32,7 +27,8 @@ now () {
 print_exit_code() {
   local e=$?
   if [ $e -ne 0 ]; then
-    echo -ne "\e[0;91m$e\e[0m "
+    # echo -ne "+ \e[38;5;196m$e\e[0m "
+    echo -ne "[ $e ] "
   else
     echo -n ""
   fi
@@ -61,18 +57,51 @@ export PATH=/local/bin:$PATH:$HOME/bin:$HOME/local/bin
 #    PB=
 #  fi
 alias ls="ls --color=auto"
-export PS1="\e[0m\e]0;\h$(first_child_cmd \$\$)\a\D{%y-%m-%d %T} \h \u \e[35m\$(git_branch)\e[0m \e[34m\w\e[0m\n\$"
+#export PS1="\e[0m\e]0;\h$(first_child_cmd \$\$)\a\D{%y-%m-%d %T} \h \u \e[35m\$(git_branch)\e[0m \e[34m\w\e[0m\n\$"
+
+
+ps1_git_repo(){
+  local r=$(2>/dev/null git remote -v show | grep origin | head -n1 | sed -E 's/^.*\.com\///' | sed -e 's/^Shopify\///' | sed -e 's/\.git.*//')
+  [ -n "$r" ] && echo "$r "
+}
+
+ps1_git_branch() {
+  local br=$(git branch 2>/dev/null|grep '^ *'|awk '{ print $2 }')
+  echo ${br:-'-'}
+}
+
+ps1_user(){
+#  if [ -n "$USER" -a "$USER" != "my local user _here_" ]; then
+#    echo "$USER "
+#  else
+#    echo ""
+#  fi
+}
+
+ps1_host(){
+  local h=$(hostname -s)
+  # this should be smarter
+  if [ -n "$h" -a "$h" != "work machine :)" ]; then
+    echo "$h "
+  else
+    echo ""
+  fi
+}
+
+export PS1="\e[0m\e]0;\h\a\D{%y-%m-%d %T} \$(ps1_host)\$(ps1_user)\e[38;5;60m\$(ps1_git_repo)\e[0m\e[38;5;184m\$(ps1_git_branch)\e[0m \e[38;5;39m\w\e[0m\n\$"
 
 
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 alias g=git
 alias grepr='grep -r -n --color=auto'
 alias ip2number="perl -le 'print unpack \"N\", pack \"C4\", split /\./, shift'"
+alias k=kubectl
 alias ls='ls --color=auto'
 alias number2ip="perl -le 'print join \".\", unpack \"C4\", pack \"N\", shift'"
 alias qdiff="diff -r -q -x '.*' -x tags"
+alias p=podman
 alias vim="vim -p"
-alias vimdiffi="vimdiff -c 'set diffopt+=iwhite' -c 'set diffexpr=\"\"' -c 'windo set wrap' -c 'colorscheme evening'"
+alias vimdiffi="vimdiff -c 'set diffopt+=iwhite' -c 'set diffexpr=\"\"' -c 'windo set wrap' -c 'colorscheme darkblue'"
 alias git_refs="git for-each-ref --format='%(refname:short)|%(upstream:short)' refs/heads | column -t -s '|'|grep '\\s'"
 
 # Prefix-search history using up/down keys
@@ -124,3 +153,7 @@ fi
 # Per-machine settings
 [ -f ~/.bashrc.local ] && . ~/.bashrc.local
 
+
+[[ -f /opt/dev/sh/chruby/chruby.sh ]] && type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; }
+
+[[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
